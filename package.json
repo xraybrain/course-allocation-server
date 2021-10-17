@@ -1,0 +1,44 @@
+{
+  "name": "course-allocation-system",
+  "version": "1.0.0",
+  "description": "This is the backend of a course allocation sytem for higher instituions. the purpose is to allocate course to lecturers in an efficient when in which all lecturers a allocated courses with small difference in total number of students offering the course.",
+  "main": "dist/app.js",
+  "prisma": {
+    "seed": "ts-node prisma/seed/seed.ts"
+  },
+  "scripts": {
+    "dev": "nodemon --config nodemon.json src/app.ts",
+    "start": "dist/app.js"
+  },
+  "keywords": [
+    "course",
+    "allocation",
+    "lecturers",
+    "students"
+  ],
+  "author": "xraybrain",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^3.0.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.4",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^16.9.1",
+    "@types/yup": "^0.29.13",
+    "prisma": "^3.0.2",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
+  }
+}

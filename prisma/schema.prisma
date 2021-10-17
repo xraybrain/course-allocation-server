@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  firstname String @db.VarChar(20)
+  lastname String @db.VarChar(20)
+  email String @db.VarChar(40)
+  password String @db.Char(60)
+  sessions Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id Int @id @default(autoincrement())
+  userAgent String @db.VarChar(255)
+  valid Boolean @default(true)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?
+}
+
+model Department {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(150) @unique
+  students Student[]
+  departmentCourses DepartmentCourse[]
+  lecturers Lecturer[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Level {
+  id Int @id @default(autoincrement())
+  name String @unique
+  students Student[]
+  departmentCourses DepartmentCourse[]
+}
+
+model Qualification {
+  id Int @id @default(autoincrement())
+  title String
+  grade Int
+  lecturers LecturerQualification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lecturer {
+  id Int @id @default(autoincrement())
+  firstname String @db.VarChar(20)
+  lastname String @db.VarChar(20)
+  email String @db.VarChar(40)
+  phone String @db.VarChar(14)
+  doa DateTime
+  gender String @db.VarChar(6)
+  qualifications LecturerQualification[]
+  allocations Allocation[]
+
+  department Department? @relation(fields: [deptId], references: [id], onDelete: SetNull)
+  deptId Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LecturerQualification {
+  id Int @id @default(autoincrement())
+  qualification Qualification @relation(fields: [qualifyId], references: [id], onDelete: Cascade)
+  qualifyId Int
+  lecturer Lecturer @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
+  lecturerId Int
+}
+
+model Student {
+  id Int @id @default(autoincrement())
+  allocations Allocation[]
+  total Int
+
+  department Department @relation(fields: [deptId], references: [id], onDelete:Cascade)
+  deptId Int 
+  level Level? @relation(fields: [levelId], references: [id], onDelete:SetNull)
+  levelId Int?
+}
+
+model Course {
+  id Int @id @default(autoincrement())
+  code String @db.VarChar(10) @unique
+  title String @db.VarChar(100) @unique
+  departmentCourses DepartmentCourse[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DepartmentCourse {
+  id Int @id @default(autoincrement())
+  mode Int
+  level Level @relation(fields: [levelId], references: [id], onDelete: Cascade)
+  levelId Int
+  department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  allocations Allocation[]
+  deptId Int
+  course Course @relation(fields: [courseId], references:[id], onDelete: Cascade)
+  courseId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Allocation {
+  id Int @id @default(autoincrement())
+  lecturer Lecturer @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
+  lecturerId Int
+  departmentCourse DepartmentCourse @relation(fields: [deptCourseId], references: [id], onDelete: Cascade)
+  deptCourseId Int
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+}
